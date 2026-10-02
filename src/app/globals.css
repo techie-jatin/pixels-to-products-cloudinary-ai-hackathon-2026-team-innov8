@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Configure Tailwind v4 to use manual dark mode class toggling instead of system default */
+@custom-variant dark (&:where(.dark, .dark *));
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(600px); }
+  100% { transform: translateY(-100%); }
+}
+
+.scanning-laser { animation: scan 3s ease-in-out infinite; }
+
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+
+
