@@ -93,6 +93,8 @@ export default function Home() {
     window.open(url, '_blank');
   };
 
+  const [aiModel, setAiModel] = useState<"standard" | "high_def" | "creative">("standard");
+
   const presetPrompts = [
     { label: "Modern Office", prompt: "on a clean modern office desk with a blurred glowing monitor in the background and professional studio lighting" },
     { label: "Marble Kitchen", prompt: "on a pristine white marble kitchen counter with bright natural morning sunlight streaming through a window and soft elegant shadows" },
@@ -101,6 +103,13 @@ export default function Home() {
     { label: "Nature Outdoor", prompt: "sitting on a mossy rock in a lush green forest with dappled sunlight filtering through trees for cinematic nature photography" },
     { label: "Cyberpunk Neon", prompt: "on a wet metallic surface reflecting vibrant neon pink and blue city lights in a dark moody cyberpunk aesthetic with cinematic glow" }
   ];
+
+  const applyGeneration = () => {
+    let finalPrompt = prompt.replace(/,/g, ' and');
+    if (aiModel === "high_def") finalPrompt += " in ultra 8k high definition, photorealistic, Unreal Engine 5 render";
+    if (aiModel === "creative") finalPrompt += " in a highly stylized, artistic, vivid color grading, creative photography style";
+    setActivePrompt(finalPrompt);
+  };
 
   return (
     <div className={`${isDarkMode ? 'dark' : ''}`}>
@@ -216,10 +225,25 @@ export default function Home() {
                         rows={3}
                         className="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-[8px] focus:border-blue-600 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-600 p-3 text-[14px] resize-none outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed no-scrollbar"
                       />
+                      
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400">Model Choice</label>
+                        <select 
+                          value={aiModel} 
+                          onChange={(e) => setAiModel(e.target.value as any)}
+                          disabled={isImageLoading}
+                          className="w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 border border-zinc-200 dark:border-zinc-800 rounded-[8px] p-2 text-[13px] outline-none focus:border-blue-600 disabled:opacity-50"
+                        >
+                          <option value="standard">Standard Diffusion</option>
+                          <option value="high_def">Photorealistic (8K)</option>
+                          <option value="creative">Creative / Stylized</option>
+                        </select>
+                      </div>
+
                       <button
-                        onClick={() => setActivePrompt(prompt.replace(/,/g, ' and'))}
+                        onClick={applyGeneration}
                         disabled={isImageLoading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2.5 rounded-full font-medium text-[14px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2.5 rounded-full font-medium text-[14px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                       >
                         Generate
                       </button>
