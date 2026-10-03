@@ -105,9 +105,9 @@ export default function Home() {
   ];
 
   const applyGeneration = () => {
-    let finalPrompt = prompt.replace(/,/g, ' and');
-    if (aiModel === "high_def") finalPrompt += " in ultra 8k high definition, photorealistic, Unreal Engine 5 render";
-    if (aiModel === "creative") finalPrompt += " in a highly stylized, artistic, vivid color grading, creative photography style";
+    let finalPrompt = prompt.replace(/,/g, ' and').trim();
+    if (aiModel === "high_def") finalPrompt += " photorealistic 8k";
+    if (aiModel === "creative") finalPrompt += " creative stylized";
     setActivePrompt(finalPrompt);
   };
 
@@ -164,6 +164,10 @@ export default function Home() {
                   options={{ tags: ['ai-product-studio'] }}
                   onSuccess={(result: any) => {
                     if (result.info?.public_id) {
+                      setPrompt("");
+                      setActivePrompt("");
+                      setFormat("1:1");
+                      setVariants([]);
                       setImageId(result.info.public_id);
                       loadAssets();
                     }
@@ -242,7 +246,7 @@ export default function Home() {
 
                       <button
                         onClick={applyGeneration}
-                        disabled={isImageLoading}
+                        disabled={isImageLoading || !prompt.trim()}
                         className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2.5 rounded-full font-medium text-[14px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                       >
                         Generate
@@ -501,6 +505,10 @@ export default function Home() {
                   <div 
                     key={asset.public_id} 
                     onClick={() => {
+                      setPrompt("");
+                      setActivePrompt("");
+                      setFormat("1:1");
+                      setVariants([]);
                       setImageId(asset.public_id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
